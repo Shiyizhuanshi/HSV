@@ -36,7 +36,7 @@ fun intro_nand where
          NAND (intro_nand c1) (intro_nand c2))"
 | "intro_nand (NOT c) = NAND (intro_nand c) TRUE"
 | "intro_nand TRUE = TRUE"
-| "intro_nand FALSE = NAND TRUE TRUE"
+| "intro_nand FALSE = NAND TRUE FALSE"
 | "intro_nand (INPUT i) = INPUT i"
 
 
@@ -44,14 +44,12 @@ text \<open> The intro_nand transformation is sound. Note that there is a
   (deliberate) bug in the definition above, which you will need to fix 
   before you can prove the theorem below.\<close>
 theorem intro_nand_is_sound: "intro_nand c \<sim> c"
-proof(induction c)
-qed(simp+)
+  oops
 
 text \<open> The only_nands predicate holds if a circuit contains only NAND gates. \<close>
 fun only_nands where
   "only_nands (NAND c1 c2) = (only_nands c1 \<and> only_nands c2)"
 | "only_nands (INPUT _) = True"
-| "only_nands TRUE = True"
 | "only_nands _ = False"
 
 text \<open> The output of the intro_nand transformation is a circuit that only
@@ -60,9 +58,7 @@ text \<open> The output of the intro_nand transformation is a circuit that only
   theorem below. \<close>
 theorem intro_nand_only_produces_nands:
   "only_nands (intro_nand c)"
-proof(induction c)
-qed(simp+)
-
+  oops
 
 section \<open> Task 2: Converting numbers to lists of digits. \<close>
 
@@ -76,29 +72,12 @@ value "digits10 42"
 text \<open> Every digit is less than 10 (helper lemma). \<close>
 lemma digits10_all_below_10_helper: 
   "ds = digits10 n \<Longrightarrow> \<forall>d \<in> set ds. d < 10"
-proof (induction n arbitrary: ds rule: digits10.induct)
-  case (1 n)
-  then show ?case 
-  proof (cases" n < 10")
-    case True
-    then show ?thesis try
-      by (simp add: "1.prems")
-  next
-    case False
-    then have "ds = (n mod 10) # digits10 (n div 10)" using "1.prems" by simp
-    moreover have "n mod 10 < 10" by simp
-    moreover have "\<forall>d \<in> set (digits10 (n div 10)). d < 10" using "1.IH" False by blast
-    ultimately show ?thesis 
-      by (metis set_ConsD)
-  qed
-qed
+  oops
 
 text \<open> Every digit is less than 10. \<close>
 corollary 
   "\<forall>d \<in> set (digits10 n). d < 10" 
-  using digits10_all_below_10_helper by blast
-
-
+  oops
 
 text \<open> Task 3: Converting to and from digit lists. \<close>
 
@@ -113,20 +92,9 @@ value "sum10 [2,4]"
 text \<open> Applying digits10 then sum10 gets you back to the same number. \<close>
 theorem digits10_sum10_inverse: 
   "sum10 (digits10 n) = n"
-proof(induction n rule:digits10.induct)
-qed(simp+)
+  oops
 
 section \<open> Task 4: A divisibility theorem. \<close>
-theorem ababab_37_divisible:
-  fixes a b :: nat
-  assumes "a < 10" "b < 10"
-  defines "n \<equiv> 101010 * a + 10101 * b"
-  shows "37 dvd n"
-proof -
-  have "n = (10 * a + b)* 10101" using n_def by simp
-  hence "n = 37 * 273 * (10 * a + b)" by simp
-  then show "37 dvd n" by simp
-qed
 
 section \<open> Task 5: Verifying a naive SAT solver. \<close>
 
