@@ -48,11 +48,23 @@ predicate dupe_free(xs:seq<symbol>)
   forall i,j :: 0 <= i < j < |xs| ==> xs[i] != xs[j]
 }
 
+predicate same_elements(xs: seq<symbol>, ys: seq<symbol>)
+{
+  (forall i :: 0 <= i < |xs| ==> xs[i] in ys) &&
+  (forall j :: 0 <= j < |ys| ==> ys[j] in xs)
+}
+
+predicate no_same_elements(xs: seq<symbol>, ys: seq<symbol>)
+{
+  forall i :: 0 <= i < |xs| ==> xs[i] !in ys
+}
+
 // Part (a): reversing a dupe-free sequence (recursive implementation)
 method rev(xs:seq<symbol>)
 returns (ys:seq<symbol>)
 requires dupe_free(xs)
 ensures dupe_free(ys)
+ensures same_elements(xs, ys)
 {
   if (xs == []) {
     ys := [];
@@ -67,18 +79,31 @@ method rev2(xs:seq<symbol>)
 returns (ys:seq<symbol>)
 requires dupe_free(xs)
 ensures dupe_free(ys)
+// ensures same_elements(xs, ys)
 {
-  // ...?
+  ys := [];
+  var i := |xs| - 1;
+  while i >= 0
+    invariant 0 <= i + 1 <= |xs|
+    invariant dupe_free(xs)
+    invariant same_elements(xs[i+1..], ys)
+    invariant dupe_free(ys)
+  {
+    ys := [xs[i]] + ys;
+    i := i - 1;
+  }
 }
 
 // Part (c): concatenating two dupe-free sequences
+// false when the sequences have the same elements
+// eg. [1,2,3] and [3,2,1]
 lemma dupe_free_concat(xs:seq<symbol>, ys:seq<symbol>)
 requires dupe_free(xs)
 requires dupe_free(ys)
-//requires ...?
+requires no_same_elements(xs, ys)
 ensures dupe_free (xs + ys)
 {
-  // ...?
+  assert forall i, j :: 0 <= i < j < |xs + ys| ==> (xs + ys)[i] != (xs + ys)[j];
 }
 
 //////////////////////////////////////////
