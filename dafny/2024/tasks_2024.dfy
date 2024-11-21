@@ -122,6 +122,7 @@ ensures symbols_clause(remove_symbols_clause(c, xs)) == symbols_clause(c) - xs
 // remove the given set of symbols from a query
 function remove_symbols(q:query, xs:set<symbol>) : query
 ensures symbols(remove_symbols(q, xs)) == symbols(q) - xs
+ensures |remove_symbols(q, xs)| == |q|
 {
   if q == [] then [] else
     [remove_symbols_clause(q[0], xs)] + remove_symbols(q[1..], xs)
@@ -131,6 +132,8 @@ ensures symbols(remove_symbols(q, xs)) == symbols(q) - xs
 function symbol_seq_clause(c:clause) : seq<symbol>
 ensures dupe_free(symbol_seq_clause(c))
 ensures forall x :: x in symbol_seq_clause(c) <==> x in symbols_clause(c)
+decreases |symbols_clause(c)|
+decreases |c|
 {
   if c == [] then [] else
     var x := c[0].0;
@@ -138,14 +141,23 @@ ensures forall x :: x in symbol_seq_clause(c) <==> x in symbols_clause(c)
     [x] + symbol_seq_clause(c')
 }
 
+function symbol_count(q: query) : int
+{
+  if q == [] then 0 else |symbols_clause(q[0])| + symbol_count(q[1..])
+}
+
 // Part (b): extract the sequence of symbols that appear in a query
 function symbol_seq(q:query) : seq<symbol>
 ensures dupe_free(symbol_seq(q))
 ensures forall x :: x in symbol_seq(q) <==> x in symbols(q)
+decreases |q|
 {
   if q == [] then [] else
     var xs := symbols_clause(q[0]);
     var q' := remove_symbols(q[1..], xs);
+    assert dupe_free(symbol_seq(q'));
+    assert forall i :: i in xs ==> i !in symbol_seq(q');
+    dupe_free_concat(symbol_seq_clause(q[0]), symbol_seq(q'));
     symbol_seq_clause(q[0]) + symbol_seq(q')
 }
 
@@ -159,7 +171,10 @@ returns (result: bool)
 ensures result == evaluate_clause(c,r)
 {
   var i := 0;
-  while (i < |c|) {
+  while (i < |c|) 
+  invariant 0 <= i <= |c|
+  invariant forall j :: 0 <= j < i ==> (c[j] !in r.Items)
+  {
     if (c[i] in r.Items) {
       return true;
     }
@@ -174,7 +189,10 @@ returns (result: bool)
 ensures result == evaluate(q,r)
 {
   var i := 0;
-  while (i < |q|) {
+  while (i < |q|) 
+  invariant 0 <= i <= |q|
+  invariant forall j :: 0 <= j < i ==> evaluate_clause(q[j], r)
+  {
     result := eval_clause(q[i], r);
     if (!result) {
       return false;
@@ -184,9 +202,9 @@ ensures result == evaluate(q,r)
   return true;
 }
 
-/////////////////////////////////////////////
-// TASK 4: Verifying a brute-force SAT solver
-/////////////////////////////////////////////
+// /////////////////////////////////////////////
+// // TASK 4: Verifying a brute-force SAT solver
+// /////////////////////////////////////////////
 
 // prepends (x,b) to each valuation in a given sequence 
 function map_prepend (x:symbol, b:bool, rs:seq<valuation>) : seq<valuation>
@@ -217,6 +235,8 @@ ensures sat==false ==> forall r:valuation :: r in mk_valuation_seq(symbol_seq(q)
   sat := false;
   var i := 0;
   while (i < |rs|) 
+    invariant 0 <= i <= |rs|
+    invariant forall j :: 0 <= j < i ==> !evaluate(q,rs[j])
   {
     sat := eval(q, rs[i]);
     if (sat) {
@@ -227,71 +247,71 @@ ensures sat==false ==> forall r:valuation :: r in mk_valuation_seq(symbol_seq(q)
   return false, map[];
 }
 
-////////////////////////////////////////
-// TASK 5: Verifying a simple SAT solver
-////////////////////////////////////////
+// ////////////////////////////////////////
+// // TASK 5: Verifying a simple SAT solver
+// ////////////////////////////////////////
 
-// This function updates a clause under the valuation x:=b. 
-// This means that the literal (x,b) is true. So, if the clause
-// contains the literal (x,b), the whole clause is true and can 
-// be deleted. Otherwise, all occurrences of (x,!b) can be 
-// removed from the clause because those literals are false and 
-// cannot contribute to making the clause true.
-function update_clause (x:symbol, b:bool, c:clause) : query
-{
-  if ((x,b) in c) then [] else [remove_symbols_clause(c,{x})]
-}
+// // This function updates a clause under the valuation x:=b. 
+// // This means that the literal (x,b) is true. So, if the clause
+// // contains the literal (x,b), the whole clause is true and can 
+// // be deleted. Otherwise, all occurrences of (x,!b) can be 
+// // removed from the clause because those literals are false and 
+// // cannot contribute to making the clause true.
+// function update_clause (x:symbol, b:bool, c:clause) : query
+// {
+//   if ((x,b) in c) then [] else [remove_symbols_clause(c,{x})]
+// }
 
-// This function updates a query under the valuation x:=b. It
-// invokes update_clause on each clause in turn.
-function update_query (x:symbol, b:bool, q:query) : query
-{
-  if q == [] then [] else
-    var q_new := update_clause(x,b,q[0]);
-    var q' := update_query(x,b,q[1..]);
-    q_new + q'
-}
+// // This function updates a query under the valuation x:=b. It
+// // invokes update_clause on each clause in turn.
+// function update_query (x:symbol, b:bool, q:query) : query
+// {
+//   if q == [] then [] else
+//     var q_new := update_clause(x,b,q[0]);
+//     var q' := update_query(x,b,q[1..]);
+//     q_new + q'
+// }
 
-// Updating a query under the valuation x:=b is the same as updating 
-// the valuation itself and leaving the query unchanged.
-lemma evaluate_update_query(x:symbol, b:bool, r:valuation, q:query)
-requires x !in r.Keys
-ensures evaluate (update_query (x,b,q), r) == evaluate (q, r[x:=b])
-{
-  // ...?
-}
+// // Updating a query under the valuation x:=b is the same as updating 
+// // the valuation itself and leaving the query unchanged.
+// lemma evaluate_update_query(x:symbol, b:bool, r:valuation, q:query)
+// requires x !in r.Keys
+// ensures evaluate (update_query (x,b,q), r) == evaluate (q, r[x:=b])
+// {
+//   // ...?
+// }
 
-// A simple SAT solver. Given a query, it does a three-way case split. If
-// the query has no clauses then it is trivially satisfiable (with the
-// empty valuation). If the first clause in the query is empty, then the
-// query is unsatisfiable. Otherwise, it considers the first symbol that 
-// appears in the query, and makes two recursive solving attempts: one 
-// with that symbol evaluated to true, and one with it evaluated to false.
-// If neither recursive attempt succeeds, the query is unsatisfiable.
-method simp_solve (q:query)
-returns (sat:bool, r:valuation)
-ensures sat==true ==> evaluate(q,r)
-ensures sat==false ==> forall r :: !evaluate(q,r)
-{
-  if (q == []) {
-    return true, map[];
-  } else if (q[0] == []) {
-    return false, map[];
-  } else {
-    var x := q[0][0].0;
-    sat, r := simp_solve(update_query(x,true,q));
-    if (sat) {
-      r := r[x:=true];
-      return;
-    } 
-    sat, r := simp_solve(update_query(x,false,q));
-    if (sat) {
-      r := r[x:=false];
-      return;
-    }
-    return sat, map[];
-  }
-}
+// // A simple SAT solver. Given a query, it does a three-way case split. If
+// // the query has no clauses then it is trivially satisfiable (with the
+// // empty valuation). If the first clause in the query is empty, then the
+// // query is unsatisfiable. Otherwise, it considers the first symbol that 
+// // appears in the query, and makes two recursive solving attempts: one 
+// // with that symbol evaluated to true, and one with it evaluated to false.
+// // If neither recursive attempt succeeds, the query is unsatisfiable.
+// method simp_solve (q:query)
+// returns (sat:bool, r:valuation)
+// ensures sat==true ==> evaluate(q,r)
+// ensures sat==false ==> forall r :: !evaluate(q,r)
+// {
+//   if (q == []) {
+//     return true, map[];
+//   } else if (q[0] == []) {
+//     return false, map[];
+//   } else {
+//     var x := q[0][0].0;
+//     sat, r := simp_solve(update_query(x,true,q));
+//     if (sat) {
+//       r := r[x:=true];
+//       return;
+//     } 
+//     sat, r := simp_solve(update_query(x,false,q));
+//     if (sat) {
+//       r := r[x:=false];
+//       return;
+//     }
+//     return sat, map[];
+//   }
+// }
 
 method Main ()
 {
@@ -305,34 +325,37 @@ method Main ()
             [[(1, true), (2, false)]];
   var q4 := /* (¬b ∨ a) */
             [[(2, false), (1, true)]];
+            
+  var symbols_clause := symbols_clause(q1[0]);
+  print "symbols_clause = ", symbols_clause, "\n";
   
-  var symbol_seq := symbol_seq(q1);
-  print "symbols = ", symbol_seq, "\n";
+  // var symbol_seq := symbol_seq(q1);
+  // print "symbols = ", symbol_seq, "\n";
 
-  var rs := mk_valuation_seq(symbol_seq);
-  print "all valuations = ", rs, "\n";
+  // var rs := mk_valuation_seq(symbol_seq);
+  // print "all valuations = ", rs, "\n";
   
-  sat, r := naive_solve(q1);
-  print "solver = naive, q1 result = ", sat, ", valuation = ", r, "\n";
+  // sat, r := naive_solve(q1);
+  // print "solver = naive, q1 result = ", sat, ", valuation = ", r, "\n";
 
-  sat, r := naive_solve(q2);
-  print "solver = naive, q2 result = ", sat, ", valuation = ", r, "\n";
+  // sat, r := naive_solve(q2);
+  // print "solver = naive, q2 result = ", sat, ", valuation = ", r, "\n";
 
-  sat, r := naive_solve(q3);
-  print "solver = naive, q3 result = ", sat, ", valuation = ", r, "\n";
+  // sat, r := naive_solve(q3);
+  // print "solver = naive, q3 result = ", sat, ", valuation = ", r, "\n";
 
-  sat, r := naive_solve(q4);
-  print "solver = naive, q4 result = ", sat, ", valuation = ", r, "\n";
+  // sat, r := naive_solve(q4);
+  // print "solver = naive, q4 result = ", sat, ", valuation = ", r, "\n";
 
-  sat, r := simp_solve(q1);
-  print "solver = simp, q1 result = ", sat, ", valuation = ", r, "\n";
+  // sat, r := simp_solve(q1);
+  // print "solver = simp, q1 result = ", sat, ", valuation = ", r, "\n";
 
-  sat, r := simp_solve(q2);
-  print "solver = simp, q2 result = ", sat, ", valuation = ", r, "\n";
+  // sat, r := simp_solve(q2);
+  // print "solver = simp, q2 result = ", sat, ", valuation = ", r, "\n";
 
-  sat, r := simp_solve(q3);
-  print "solver = simp, q3 result = ", sat, ", valuation = ", r, "\n";
+  // sat, r := simp_solve(q3);
+  // print "solver = simp, q3 result = ", sat, ", valuation = ", r, "\n";
 
-  sat, r := simp_solve(q4);
-  print "solver = simp, q4 result = ", sat, ", valuation = ", r, "\n";
+  // sat, r := simp_solve(q4);
+  // print "solver = simp, q4 result = ", sat, ", valuation = ", r, "\n";
 }

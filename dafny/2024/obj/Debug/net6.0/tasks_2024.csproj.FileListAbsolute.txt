@@ -1,0 +1,15 @@
+/Users/james_jiao/Downloads/HSV/HSV/dafny/2024/obj/Debug/net6.0/tasks_2024.GeneratedMSBuildEditorConfig.editorconfig
+/Users/james_jiao/Downloads/HSV/HSV/dafny/2024/obj/Debug/net6.0/tasks_2024.AssemblyInfoInputs.cache
+/Users/james_jiao/Downloads/HSV/HSV/dafny/2024/obj/Debug/net6.0/tasks_2024.AssemblyInfo.cs
+/Users/james_jiao/Downloads/HSV/HSV/dafny/2024/obj/Debug/net6.0/tasks_2024.csproj.CoreCompileInputs.cache
+/Users/james_jiao/Downloads/HSV/HSV/dafny/2024/obj/Debug/net6.0/tasks_2024.sourcelink.json
+/Users/james_jiao/Downloads/HSV/HSV/dafny/2024/tasks_2024
+/Users/james_jiao/Downloads/HSV/HSV/dafny/2024/obj/Debug/net6.0/tasks_2024.dll
+/Users/james_jiao/Downloads/HSV/HSV/dafny/2024/obj/Debug/net6.0/refint/tasks_2024.dll
+/Users/james_jiao/Downloads/HSV/HSV/dafny/2024/obj/Debug/net6.0/tasks_2024.pdb
+/Users/james_jiao/Downloads/HSV/HSV/dafny/2024/tasks_2024.deps.json
+/Users/james_jiao/Downloads/HSV/HSV/dafny/2024/obj/Debug/net6.0/tasks_2024.genruntimeconfig.cache
+/Users/james_jiao/Downloads/HSV/HSV/dafny/2024/tasks_2024.runtimeconfig.json
+/Users/james_jiao/Downloads/HSV/HSV/dafny/2024/tasks_2024.dll
+/Users/james_jiao/Downloads/HSV/HSV/dafny/2024/obj/Debug/net6.0/ref/tasks_2024.dll
+/Users/james_jiao/Downloads/HSV/HSV/dafny/2024/tasks_2024.pdb
