@@ -5,9 +5,10 @@ module counter (
     initial count = 0;
 
     property going_up;
-        @(posedge clk) $rose(count);
+        @(posedge clk)
         count > 0 |-> count == $past(count) + 1;
     endproperty
+
     always @(posedge clk) begin
         // assert property (count > 0 | -> count == $past(count) + 1); 
         if (count == 15)

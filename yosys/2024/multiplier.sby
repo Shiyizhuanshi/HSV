@@ -6,8 +6,8 @@ depth 100
 smtbmc
 
 [script]
-read -formal counter.v
-prep -top counter
+read -formal multiplier.sv
+prep -top multiplier
 
 [files]
-counter.v
+multiplier.sv
