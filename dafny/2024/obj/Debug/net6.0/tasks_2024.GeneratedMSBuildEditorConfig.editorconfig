@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = tasks_2024
-build_property.ProjectDir = /Users/james_jiao/Downloads/HSV/HSV/dafny/2024/
+build_property.ProjectDir = C:\Users\Administrator\Desktop\HSV\HSV\dafny\2024\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

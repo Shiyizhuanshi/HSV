@@ -1,0 +1,12 @@
+SBY 19:18:20 [counter] Removing directory 'C:\Users\Administrator\Desktop\HSV\HSV\yosys\counter'.
+SBY 19:18:20 [counter] Copy 'C:\Users\Administrator\Desktop\HSV\HSV\yosys\counter.v' to 'C:\Users\Administrator\Desktop\HSV\HSV\yosys\counter\src\counter.v'.
+SBY 19:18:20 [counter] engine_0: smtbmc
+SBY 19:18:20 [counter] base: starting process "cd counter/src& yosys -ql ../model/design.log ../model/design.ys"
+SBY 19:18:20 [counter] base: counter.v:7: ERROR: syntax error, unexpected TOK_PROPERTY
+SBY 19:18:20 [counter] base: finished (returncode=1)
+SBY 19:18:20 [counter] base: task failed. ERROR.
+SBY 19:18:20 [counter] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 19:18:20 [counter] summary: Elapsed process time unvailable on Windows
+SBY 19:18:20 [counter] summary: engine_0 (smtbmc) did not return a status
+SBY 19:18:20 [counter] summary: engine_0 did not produce any traces
+SBY 19:18:20 [counter] DONE (ERROR, rc=16)
