@@ -2,6 +2,7 @@ counter/
 yosys/counter/
 obj/
 multiplier/
+multiplier_cover/
 run_tabby_han.bat
 dafny\2024
 !dafny\2024\*.dfy
