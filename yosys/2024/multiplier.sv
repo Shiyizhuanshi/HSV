@@ -51,7 +51,7 @@ module multiplier (
   // Task1: Devise a tight upper bound on the value in out, 
   //        and prove that out never exceeds this bound.
   property upperboud;
-    out <= 65025;
+    (rst || stage == 9) |-> out <= 65025;
   endproperty
 
   // Task2: Prove that stage increments on each clock cycle
@@ -146,7 +146,7 @@ module multiplier (
 
    always @(posedge clk) begin
 
-   assert (0==0); 
+    assert property (upperboud);
      // write your properties here!
 
    end
