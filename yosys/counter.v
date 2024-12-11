@@ -4,23 +4,26 @@ module counter (
 );
     initial count = 0;
 
-    property going_up;
-        @(posedge clk)
-        count > 0 |-> count == $past(count) + 1;
-    endproperty
-
     always @(posedge clk) begin
-        // assert property (count > 0 | -> count == $past(count) + 1); 
         if (count == 15)
             count <= 0;
         else
             count <= count + 1;
     end
 
-`ifdef FORMAL
-    always @(*) begin
+    `ifdef FORMAL
+
+    // Define the counter increment behavior as a property
+    property going_up;
+        (count > 0) |-> (count == $past(count) + 1);
+    endproperty
+
+    // Assertions for formal verification
+    always @(posedge clk) begin
+        // Use assert with the property directly
         assert (count < 32);
+        assert property (going_up); // Use the property correctly in an assertion
     end
-`endif
+    `endif
 
 endmodule
