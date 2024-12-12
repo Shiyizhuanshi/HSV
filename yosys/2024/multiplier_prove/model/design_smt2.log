@@ -1,0 +1,72 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite -- YosysHQ Edition [202312041102]     |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2023 YosysHQ GmbH                                    |
+ |                                                                            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.35+36 (git sha1 c95298225, x86_64-w64-mingw32-g++ 9.2.1 -Os -fpermissive)
+
+
+-- Executing script file `design_smt2.ys' --
+
+1. Executing RTLIL frontend.
+Input filename: design_prep.il
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \multiplier
+
+2.2. Analyzing design hierarchy..
+Top module:  \multiplier
+Removed 0 unused modules.
+Module multiplier directly or indirectly contains formal properties -> setting "keep" attribute.
+
+3. Executing FORMALFF pass.
+
+4. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+5. Printing statistics.
+
+=== multiplier ===
+
+   Number of wires:                249
+   Number of wire bits:            735
+   Number of public wires:          31
+   Number of public wire bits:     258
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                260
+     $add                            3
+     $and                            9
+     $anyinit                       22
+     $assert                        16
+     $assume                         1
+     $eq                            35
+     $ff                            45
+     $le                             2
+     $logic_not                      2
+     $mul                            9
+     $mux                           85
+     $not                           17
+     $or                            10
+     $reduce_bool                    1
+     $shl                            1
+     $shr                            1
+     $sub                            1
+
+6. Executing SMT2 backend.
+
+6.1. Executing BMUXMAP pass.
+
+6.2. Executing DEMUXMAP pass.
+Creating SMT-LIBv2 representation of module multiplier.
+
+End of script. Logfile hash: 458bfa901b
+Yosys 0.35+36 (git sha1 c95298225, x86_64-w64-mingw32-g++ 9.2.1 -Os -fpermissive)
+Time spent: 12% 2x write_smt2 (0 sec), 12% 2x read_ilang (0 sec), ...

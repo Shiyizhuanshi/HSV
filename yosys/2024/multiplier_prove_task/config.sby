@@ -1,0 +1,4 @@
+[options]
+    mode prove
+    depth 18
+

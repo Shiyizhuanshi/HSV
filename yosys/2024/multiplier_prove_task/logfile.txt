@@ -1,0 +1,2 @@
+SBY 14:12:47 [multiplier_prove_task] Removing directory 'C:\Users\Administrator\Desktop\HSV\HSV\yosys\2024\multiplier_prove_task'.
+SBY 14:12:47 [multiplier_prove_task] ERROR: Config file is lacking engine configuration.

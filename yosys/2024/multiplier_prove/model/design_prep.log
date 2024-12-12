@@ -1,0 +1,117 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite -- YosysHQ Edition [202312041102]     |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2023 YosysHQ GmbH                                    |
+ |                                                                            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.35+36 (git sha1 c95298225, x86_64-w64-mingw32-g++ 9.2.1 -Os -fpermissive)
+
+
+-- Executing script file `design_prep.ys' --
+
+1. Executing RTLIL frontend.
+Input filename: design.il
+
+2. Executing SCC pass (detecting logic loops).
+Found 0 SCCs in module multiplier.
+Found 0 SCCs.
+
+3. Executing SIMPLEMAP pass (map simple cells to gate primitives).
+
+4. Executing MEMORY_NORDFF pass (extracting $dff cells from memories).
+
+5. Executing ASYNC2SYNC pass.
+Replacing multiplier.$verific$stage_reg$multiplier.sv:23$306 ($aldff): ALOAD=1'0, AD=4'x, D=$verific$n23$264, Q=\stage
+Replacing multiplier.$verific$in2_shifted_reg$multiplier.sv:38$316 ($aldff): ALOAD=1'0, AD=16'x, D=$verific$n148$274, Q=\in2_shifted
+Replacing multiplier.$verific$in2_init_reg$multiplier.sv:66$330 ($aldff): ALOAD=1'0, AD=8'x, D=$verific$n361$284, Q=\in2_init
+Replacing multiplier.$verific$in1_shifted_reg$multiplier.sv:38$315 ($aldff): ALOAD=1'0, AD=8'x, D=$verific$n139$273, Q=\in1_shifted
+Replacing multiplier.$verific$in1_init_reg$multiplier.sv:66$329 ($aldff): ALOAD=1'0, AD=8'x, D=$verific$n352$283, Q=\in1_init
+Replacing multiplier.$verific$accumulator_reg$multiplier.sv:47$321 ($aldff): ALOAD=1'0, AD=16'x, D=$verific$n263$278, Q=\accumulator
+Replacing multiplier.$auto$verificsva.cc:710:getFirstAcceptReject$1180 ($adff): ARST=\rst, D=$auto$verificsva.cc:667:getFirstAcceptReject$1164, Q=$auto$verificsva.cc:667:getFirstAcceptReject$1165
+Replacing multiplier.$auto$verificsva.cc:710:getFirstAcceptReject$1179 ($adff): ARST=\rst, D=$auto$verificsva.cc:667:getFirstAcceptReject$1163, Q=$auto$verificsva.cc:667:getFirstAcceptReject$1164
+Replacing multiplier.$auto$verificsva.cc:710:getFirstAcceptReject$1178 ($adff): ARST=\rst, D=$auto$verificsva.cc:667:getFirstAcceptReject$1162, Q=$auto$verificsva.cc:667:getFirstAcceptReject$1163
+Replacing multiplier.$auto$verificsva.cc:710:getFirstAcceptReject$1177 ($adff): ARST=\rst, D=$auto$verificsva.cc:667:getFirstAcceptReject$1161, Q=$auto$verificsva.cc:667:getFirstAcceptReject$1162
+Replacing multiplier.$auto$verificsva.cc:710:getFirstAcceptReject$1176 ($adff): ARST=\rst, D=$auto$verificsva.cc:667:getFirstAcceptReject$1160, Q=$auto$verificsva.cc:667:getFirstAcceptReject$1161
+Replacing multiplier.$auto$verificsva.cc:710:getFirstAcceptReject$1175 ($adff): ARST=\rst, D=$auto$verificsva.cc:667:getFirstAcceptReject$1159, Q=$auto$verificsva.cc:667:getFirstAcceptReject$1160
+Replacing multiplier.$auto$verificsva.cc:710:getFirstAcceptReject$1174 ($adff): ARST=\rst, D=$auto$verificsva.cc:667:getFirstAcceptReject$1158, Q=$auto$verificsva.cc:667:getFirstAcceptReject$1159
+Replacing multiplier.$auto$verificsva.cc:710:getFirstAcceptReject$1173 ($adff): ARST=\rst, D=$auto$verificsva.cc:667:getFirstAcceptReject$1157, Q=$auto$verificsva.cc:667:getFirstAcceptReject$1158
+Replacing multiplier.$auto$verificsva.cc:710:getFirstAcceptReject$1172 ($adff): ARST=\rst, D=$auto$rtlil.cc:2491:And$1149, Q=$auto$verificsva.cc:667:getFirstAcceptReject$1157
+Replacing multiplier.$auto$verificsva.cc:1819:import$992 ($adff): ARST=\rst, D=$auto$rtlil.cc:2492:Or$988, Q=$auto$verificsva.cc:1817:import$990
+Replacing multiplier.$auto$verificsva.cc:1819:import$963 ($adff): ARST=\rst, D=$auto$rtlil.cc:2492:Or$959, Q=$auto$verificsva.cc:1817:import$961
+Replacing multiplier.$auto$verificsva.cc:1819:import$934 ($adff): ARST=\rst, D=$auto$rtlil.cc:2492:Or$930, Q=$auto$verificsva.cc:1817:import$932
+Replacing multiplier.$auto$verificsva.cc:1819:import$905 ($adff): ARST=\rst, D=$auto$rtlil.cc:2492:Or$901, Q=$auto$verificsva.cc:1817:import$903
+Replacing multiplier.$auto$verificsva.cc:1819:import$876 ($adff): ARST=\rst, D=$auto$rtlil.cc:2492:Or$872, Q=$auto$verificsva.cc:1817:import$874
+Replacing multiplier.$auto$verificsva.cc:1819:import$847 ($adff): ARST=\rst, D=$auto$rtlil.cc:2492:Or$843, Q=$auto$verificsva.cc:1817:import$845
+Replacing multiplier.$auto$verificsva.cc:1819:import$818 ($adff): ARST=\rst, D=$auto$rtlil.cc:2492:Or$814, Q=$auto$verificsva.cc:1817:import$816
+Replacing multiplier.$auto$verificsva.cc:1819:import$789 ($adff): ARST=\rst, D=$auto$rtlil.cc:2461:Not$781, Q=$auto$verificsva.cc:1817:import$787
+Replacing multiplier.$auto$verificsva.cc:1819:import$1190 ($adff): ARST=\rst, D=$auto$rtlil.cc:2465:ReduceOr$1182, Q=$auto$verificsva.cc:1817:import$1188
+Replacing multiplier.$auto$verificsva.cc:1819:import$1137 ($adff): ARST=\rst, D=$auto$rtlil.cc:2492:Or$1133, Q=$auto$verificsva.cc:1817:import$1135
+Replacing multiplier.$auto$verificsva.cc:1819:import$1108 ($adff): ARST=\rst, D=$auto$rtlil.cc:2492:Or$1104, Q=$auto$verificsva.cc:1817:import$1106
+Replacing multiplier.$auto$verificsva.cc:1819:import$1079 ($adff): ARST=\rst, D=$auto$rtlil.cc:2492:Or$1075, Q=$auto$verificsva.cc:1817:import$1077
+Replacing multiplier.$auto$verificsva.cc:1819:import$1050 ($adff): ARST=\rst, D=$auto$rtlil.cc:2492:Or$1046, Q=$auto$verificsva.cc:1817:import$1048
+Replacing multiplier.$auto$verificsva.cc:1819:import$1021 ($adff): ARST=\rst, D=$auto$rtlil.cc:2492:Or$1017, Q=$auto$verificsva.cc:1817:import$1019
+Replacing multiplier.$auto$verificsva.cc:1818:import$991 ($adff): ARST=\rst, D=$auto$rtlil.cc:2461:Not$986, Q=$auto$verificsva.cc:1816:import$989
+Replacing multiplier.$auto$verificsva.cc:1818:import$962 ($adff): ARST=\rst, D=$auto$rtlil.cc:2461:Not$957, Q=$auto$verificsva.cc:1816:import$960
+Replacing multiplier.$auto$verificsva.cc:1818:import$933 ($adff): ARST=\rst, D=$auto$rtlil.cc:2461:Not$928, Q=$auto$verificsva.cc:1816:import$931
+Replacing multiplier.$auto$verificsva.cc:1818:import$904 ($adff): ARST=\rst, D=$auto$rtlil.cc:2461:Not$899, Q=$auto$verificsva.cc:1816:import$902
+Replacing multiplier.$auto$verificsva.cc:1818:import$875 ($adff): ARST=\rst, D=$auto$rtlil.cc:2461:Not$870, Q=$auto$verificsva.cc:1816:import$873
+Replacing multiplier.$auto$verificsva.cc:1818:import$846 ($adff): ARST=\rst, D=$auto$rtlil.cc:2461:Not$841, Q=$auto$verificsva.cc:1816:import$844
+Replacing multiplier.$auto$verificsva.cc:1818:import$817 ($adff): ARST=\rst, D=$auto$rtlil.cc:2461:Not$812, Q=$auto$verificsva.cc:1816:import$815
+Replacing multiplier.$auto$verificsva.cc:1818:import$788 ($adff): ARST=\rst, D=$auto$rtlil.cc:2461:Not$783, Q=$auto$verificsva.cc:1816:import$786
+Replacing multiplier.$auto$verificsva.cc:1818:import$1189 ($adff): ARST=\rst, D=$auto$rtlil.cc:2461:Not$1184, Q=$auto$verificsva.cc:1816:import$1187
+Replacing multiplier.$auto$verificsva.cc:1818:import$1136 ($adff): ARST=\rst, D=$auto$rtlil.cc:2461:Not$1131, Q=$auto$verificsva.cc:1816:import$1134
+Replacing multiplier.$auto$verificsva.cc:1818:import$1107 ($adff): ARST=\rst, D=$auto$rtlil.cc:2461:Not$1102, Q=$auto$verificsva.cc:1816:import$1105
+Replacing multiplier.$auto$verificsva.cc:1818:import$1078 ($adff): ARST=\rst, D=$auto$rtlil.cc:2461:Not$1073, Q=$auto$verificsva.cc:1816:import$1076
+Replacing multiplier.$auto$verificsva.cc:1818:import$1049 ($adff): ARST=\rst, D=$auto$rtlil.cc:2461:Not$1044, Q=$auto$verificsva.cc:1816:import$1047
+Replacing multiplier.$auto$verificsva.cc:1818:import$1020 ($adff): ARST=\rst, D=$auto$rtlil.cc:2461:Not$1015, Q=$auto$verificsva.cc:1816:import$1018
+
+6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \multiplier..
+
+7. Executing FORMALFF pass.
+
+8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \multiplier..
+Removed 2 unused cells and 2 unused wires.
+<suppressed ~3 debug messages>
+
+9. Executing CHECK pass (checking for obvious problems).
+Checking module multiplier...
+Found and reported 0 problems.
+
+10. Executing SETUNDEF pass (replace undef values with defined constants).
+
+11. Executing OPT pass (performing simple optimizations).
+
+11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module multiplier.
+<suppressed ~12 debug messages>
+
+11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\multiplier'.
+Removed a total of 0 cells.
+
+11.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+11.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \multiplier..
+Removed 12 unused cells and 24 unused wires.
+<suppressed ~13 debug messages>
+
+11.5. Finished fast OPT passes.
+
+12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \multiplier..
+Removed 0 unused cells and 20 unused wires.
+<suppressed ~1 debug messages>
+
+13. Executing RTLIL backend.
+Output filename: ../model/design_prep.il
+
+End of script. Logfile hash: 3b8955cd02
+Yosys 0.35+36 (git sha1 c95298225, x86_64-w64-mingw32-g++ 9.2.1 -Os -fpermissive)
+Time spent: 5% 4x opt_clean (0 sec), 5% 2x write_rtlil (0 sec), ...
