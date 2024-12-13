@@ -372,6 +372,12 @@ text \<open> A simple SAT solver. Given a query, it does a three-way case split.
    appears in the query, and makes two recursive solving attempts: one 
    with that symbol evaluated to true, and one with it evaluated to false.
    If neither recursive attempt succeeds, the query is deemed unsatisfiable. \<close>
+
+fun simp_solve_termination_helper :: "query \<Rightarrow> nat" where
+  "simp_solve_termination_helper [] = 0" |
+  "simp_solve_termination_helper (x # xs) = 1 + simp_solve_termination_helper xs"
+
+
 function simp_solve :: "query \<Rightarrow> valuation option"
 where
   "simp_solve q = (
@@ -386,11 +392,14 @@ where
          Some \<rho> \<Rightarrow> Some ((x, False) # \<rho>)
        | None \<Rightarrow> None)))"
 by pat_completeness auto
-termination sorry
-   
-
-
-
+termination simp_solve
+proof (relation "measure (\<lambda> q. sum_list (map length q))")
+  case (1 q)
+  thus ?case
+    apply (induction q rule: simp_solve.induct)
+    apply (auto simp add: update_query.simps update_clause_def)
+    done
+qed
 
 
 value "simp_solve q1"
@@ -406,13 +415,39 @@ where
 lemma evaluate_update_query: 
   assumes "x \<notin> domain \<rho>"
   shows "evaluate (update_query x b q) \<rho> = evaluate q ((x, b) # \<rho>)"
-  oops
+proof (induct q)
+  case Nil
+  then show ?case by simp
+next
+  case (Cons c q')
+  then show ?case
+  proof (cases "List.member c (x, b)")
+    case True
+    then have "update_clause x b c = []" by simp
+    then show ?thesis
+      by simp
+  next
+    case False
+    then have "update_clause x b c = [removeAll (x, \<not> b) c]" by simp
+    then show ?thesis
+    proof -
+      have "evaluate_clause \<rho> (update_clause x b c) = evaluate_clause ((x, b) # \<rho>) c"
+        by (simp add: evaluate_clause_def)
+      also have "evaluate q' ((x, b) # \<rho>) = evaluate (update_query x b q') \<rho>"
+        using Cons by (induct q') simp
+      finally show ?thesis by simp
+    qed
+  qed
+qed
+
+
 
 text \<open> If the simple SAT solver returns a valuation, then that 
   valuation really does make the query true. \<close>
 theorem simp_solve_sat_correct:
   "simp_solve q = Some \<rho> \<Longrightarrow> evaluate q \<rho>"
-  oops
+proof - oops
+  
 
 text \<open> A valuation is deemed well-formed (wf) as long as it does
   not assign a truth-value for the same symbol more than once. \<close>
