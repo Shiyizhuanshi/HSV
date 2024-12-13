@@ -81,7 +81,7 @@ proof (induction n arbitrary: ds rule: digits10.induct)
   then show ?case 
   proof (cases" n < 10")
     case True
-    then show ?thesis try
+    then show ?thesis 
       by (simp add: "1.prems")
   next
     case False
@@ -116,6 +116,19 @@ theorem digits10_sum10_inverse:
 proof(induction n rule:digits10.induct)
 qed(simp+)
 
+text \<open> Applying sum10 and then digits10 doesn't always gets you back to the same list \<close>
+theorem sum10_digits10_not_same:
+  "\<exists>n. digits10 (sum10 n) \<noteq> n"
+proof -
+  let ?n = "[1,0]"  (* Define the witness *)
+  have "sum10 ?n = 1" by simp
+  hence "digits10 (sum10 ?n) = [1]" by simp
+  moreover have "?n \<noteq> digits10 (sum10 ?n)" by simp
+  ultimately show ?thesis by metis
+qed
+
+
+
 section \<open> Task 4: A divisibility theorem. \<close>
 theorem ababab_37_divisible:
   fixes a b :: nat
@@ -127,6 +140,8 @@ proof -
   hence "n = 37 * 273 * (10 * a + b)" by simp
   then show "37 dvd n" by simp
 qed
+
+
 
 section \<open> Task 5: Verifying a naive SAT solver. \<close>
 
@@ -276,14 +291,37 @@ text \<open> If the naive SAT solver returns a valuation, then that
 theorem naive_solve_correct_sat:
   assumes "naive_solve q = Some \<rho>"
   shows "evaluate q \<rho>"
-  oops
+proof -
+  let ?xs = "symbol_list q"
+  let ?\<rho>s = "mk_valuation_list ?xs"
+  have fold_def: "List.fold (until (evaluate q)) ?\<rho>s None = Some \<rho>"
+    using assms by (simp add: naive_solve_def)
+  then have eval_\<rho>: "evaluate q \<rho>"
+    using until_none_some
+    by metis
+  thus ?thesis
+    by simp
+qed
 
+ 
 text \<open> If the naive SAT solver returns no valuation, then none of the valuations 
   it tried make the query true. \<close>
 theorem naive_solve_correct_unsat:
   assumes "naive_solve q = None"
-  shows "\<forall>\<rho> \<in> set (mk_valuation_list (symbol_list q)). \<not> evaluate q \<rho>" 
-  oops
+  shows "\<forall>\<rho> \<in> set (mk_valuation_list (symbol_list q)). \<not> evaluate q \<rho>"
+proof -
+  let ?xs = "symbol_list q"
+  let ?\<rho>s = "mk_valuation_list ?xs"
+  have fold_def: "List.fold (until (evaluate q)) ?\<rho>s None = None"
+    using assms by (simp add: naive_solve_def)
+  hence list_all_not_eval: "list_all (\<lambda>\<rho>. \<not> evaluate q \<rho>) ?\<rho>s"
+    using until_none
+    by blast
+  thus ?thesis
+    by (simp add: list_all_iff)
+qed
+
+
 
 section \<open> Task 6: Verifying a simple SAT solver. \<close>
 
@@ -348,8 +386,12 @@ where
          Some \<rho> \<Rightarrow> Some ((x, False) # \<rho>)
        | None \<Rightarrow> None)))"
 by pat_completeness auto
-termination 
-  sorry
+termination sorry
+   
+
+
+
+
 
 value "simp_solve q1"
 value "simp_solve q2"
