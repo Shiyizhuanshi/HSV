@@ -1,9 +1,17 @@
+[tasks]
+prove prove_task
+cover cover_task
+
 [options]
-mode prove
-depth 18
+prove_task: mode prove
+prove_task: depth 18
+
+cover_task: mode cover
+cover_task: depth 18
 
 [engines]
-smtbmc
+prove_task: smtbmc
+cover_task: smtbmc
 
 [script]
 read -formal multiplier.sv

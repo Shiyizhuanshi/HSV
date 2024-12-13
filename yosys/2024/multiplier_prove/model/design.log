@@ -1,0 +1,243 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite -- YosysHQ Edition [202312041102]     |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2023 YosysHQ GmbH                                    |
+ |                                                                            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.35+36 (git sha1 c95298225, x86_64-w64-mingw32-g++ 9.2.1 -Os -fpermissive)
+
+
+-- Executing script file `../model/design.ys' --
+
+1. Executing VERIFIC (loading SystemVerilog and VHDL designs using Verific).
+Built with Verific Oct23_SW_Release, released at Tue Oct 31 23:05:56 2023.
+VERIFIC-COMMENT [VERI-1482] Analyzing Verilog file 'multiplier.sv'
+
+2. Executing PREP pass.
+
+2.1. Executing HIERARCHY pass (managing design hierarchy).
+Statically elaborating the Verific parse tree.
+Elaborating all modules in library 'work'
+VERIFIC-INFO [VERI-1018] multiplier.sv:4: compiling module 'multiplier'
+Running rewriter 'initial-assertions'.
+Clearing rewriter list.
+VERIFIC-INFO [VERI-1018] multiplier.sv:4: compiling module 'multiplier'
+VERIFIC-WARNING [VERI-1209] multiplier.sv:23: expression size 5 truncated to fit in target size 4
+Importing module multiplier.
+
+2.1.1. Analyzing design hierarchy..
+Top module:  \multiplier
+
+2.1.2. Analyzing design hierarchy..
+Top module:  \multiplier
+Removed 0 unused modules.
+Module multiplier directly or indirectly contains formal properties -> setting "keep" attribute.
+
+2.2. Executing PROC pass (convert processes to netlists).
+
+2.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+2.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+2.2.4. Executing PROC_INIT pass (extract init attributes).
+
+2.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+2.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+2.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+2.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+2.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+2.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+2.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module multiplier.
+<suppressed ~109 debug messages>
+
+2.3. Executing FUTURE pass.
+
+2.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module multiplier.
+
+2.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \multiplier..
+Removed 0 unused cells and 413 unused wires.
+<suppressed ~8 debug messages>
+
+2.6. Executing CHECK pass (checking for obvious problems).
+Checking module multiplier...
+Found and reported 0 problems.
+
+2.7. Executing OPT pass (performing simple optimizations).
+
+2.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module multiplier.
+<suppressed ~3 debug messages>
+
+2.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\multiplier'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+2.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \multiplier..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+2.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \multiplier.
+Performed a total of 0 changes.
+
+2.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\multiplier'.
+Removed a total of 0 cells.
+
+2.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \multiplier..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~1 debug messages>
+
+2.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module multiplier.
+
+2.7.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.7.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \multiplier..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+2.7.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \multiplier.
+Performed a total of 0 changes.
+
+2.7.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\multiplier'.
+Removed a total of 0 cells.
+
+2.7.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \multiplier..
+
+2.7.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module multiplier.
+
+2.7.14. Finished OPT passes. (There is nothing left to do.)
+
+2.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 3 bits (of 4) from port B of cell multiplier.$verific$add_7$multiplier.sv:23$303 ($add).
+Removed top 3 bits (of 4) from port B of cell multiplier.$verific$add_55$multiplier.sv:80$344 ($add).
+Removed top 1 bits (of 5) from port A of cell multiplier.$verific$equal_56$multiplier.sv:80$345 ($eq).
+Removed top 1 bits (of 4) from port B of cell multiplier.$verific$equal_237$multiplier.sv:109$681 ($eq).
+Removed top 5 bits (of 16) from port B of cell multiplier.$verific$equal_239$multiplier.sv:109$683 ($eq).
+Removed top 3 bits (of 4) from port B of cell multiplier.$verific$equal_245$multiplier.sv:116$688 ($eq).
+Removed top 2 bits (of 4) from port B of cell multiplier.$verific$equal_252$multiplier.sv:119$694 ($eq).
+Removed top 7 bits (of 16) from port B of cell multiplier.$verific$equal_254$multiplier.sv:119$696 ($eq).
+Removed top 2 bits (of 4) from port B of cell multiplier.$verific$equal_260$multiplier.sv:122$701 ($eq).
+Removed top 6 bits (of 16) from port B of cell multiplier.$verific$equal_262$multiplier.sv:122$703 ($eq).
+Removed top 1 bits (of 4) from port B of cell multiplier.$verific$equal_268$multiplier.sv:125$708 ($eq).
+Removed top 4 bits (of 16) from port B of cell multiplier.$verific$equal_270$multiplier.sv:125$710 ($eq).
+Removed top 1 bits (of 4) from port B of cell multiplier.$verific$equal_276$multiplier.sv:128$715 ($eq).
+Removed top 3 bits (of 16) from port B of cell multiplier.$verific$equal_278$multiplier.sv:128$717 ($eq).
+Removed top 1 bits (of 4) from port B of cell multiplier.$verific$equal_284$multiplier.sv:131$722 ($eq).
+Removed top 2 bits (of 16) from port B of cell multiplier.$verific$equal_286$multiplier.sv:131$724 ($eq).
+Removed top 1 bits (of 16) from port B of cell multiplier.$verific$equal_294$multiplier.sv:134$731 ($eq).
+Removed top 1 bits (of 5) from port A of cell multiplier.$verific$sub_309$multiplier.sv:147$742 ($sub).
+Removed top 4 bits (of 5) from port B of cell multiplier.$verific$sub_309$multiplier.sv:147$742 ($sub).
+Removed top 8 bits (of 16) from port A of cell multiplier.$verific$shift_left_319$multiplier.sv:157$749 ($shl).
+
+2.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \multiplier..
+
+2.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+2.11. Executing OPT pass (performing simple optimizations).
+
+2.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module multiplier.
+
+2.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\multiplier'.
+Removed a total of 0 cells.
+
+2.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \multiplier..
+
+2.11.4. Finished fast OPT passes.
+
+2.12. Printing statistics.
+
+=== multiplier ===
+
+   Number of wires:                175
+   Number of wire bits:            661
+   Number of public wires:          11
+   Number of public wire bits:      94
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                186
+     $add                            3
+     $adff                          37
+     $aldff                          6
+     $and                            9
+     $assert                        16
+     $cover                          1
+     $dff                           25
+     $eq                            35
+     $le                             2
+     $logic_not                      2
+     $mul                            9
+     $mux                           11
+     $not                           16
+     $or                            10
+     $reduce_bool                    1
+     $shl                            1
+     $shr                            1
+     $sub                            1
+
+2.13. Executing CHECK pass (checking for obvious problems).
+Checking module multiplier...
+Found and reported 0 problems.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \multiplier
+
+3.2. Analyzing design hierarchy..
+Top module:  \multiplier
+Removed 0 unused modules.
+Module multiplier directly or indirectly contains formal properties -> setting "keep" attribute.
+
+4. Executing jny backend.
+
+5. Executing RTLIL backend.
+Output filename: ../model/design.il
+
+Warnings: 1 unique messages, 1 total
+End of script. Logfile hash: f2ba260e17
+Yosys 0.35+36 (git sha1 c95298225, x86_64-w64-mingw32-g++ 9.2.1 -Os -fpermissive)
+Time spent: 3% 6x opt_expr (0 sec), 3% 5x opt_clean (0 sec), ...

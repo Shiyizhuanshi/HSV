@@ -1,0 +1,7 @@
+# running in multiplier_prove/src/
+read -formal multiplier.sv
+prep -top multiplier
+
+hierarchy -smtcheck
+write_jny -no-connections ../model/design.json
+write_rtlil ../model/design.il
