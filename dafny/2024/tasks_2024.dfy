@@ -251,67 +251,106 @@ ensures sat==false ==> forall r:valuation :: r in mk_valuation_seq(symbol_seq(q)
 // // TASK 5: Verifying a simple SAT solver
 // ////////////////////////////////////////
 
-// // This function updates a clause under the valuation x:=b. 
-// // This means that the literal (x,b) is true. So, if the clause
-// // contains the literal (x,b), the whole clause is true and can 
-// // be deleted. Otherwise, all occurrences of (x,!b) can be 
-// // removed from the clause because those literals are false and 
-// // cannot contribute to making the clause true.
-// function update_clause (x:symbol, b:bool, c:clause) : query
-// {
-//   if ((x,b) in c) then [] else [remove_symbols_clause(c,{x})]
-// }
+// This function updates a clause under the valuation x:=b. 
+// This means that the literal (x,b) is true. So, if the clause
+// contains the literal (x,b), the whole clause is true and can 
+// be deleted. Otherwise, all occurrences of (x,!b) can be 
+// removed from the clause because those literals are false and 
+// cannot contribute to making the clause true.
+function update_clause (x:symbol, b:bool, c:clause) : query{
+  if ((x,b) in c) then [] else [remove_symbols_clause(c,{x})]
+}
 
-// // This function updates a query under the valuation x:=b. It
-// // invokes update_clause on each clause in turn.
-// function update_query (x:symbol, b:bool, q:query) : query
-// {
-//   if q == [] then [] else
-//     var q_new := update_clause(x,b,q[0]);
-//     var q' := update_query(x,b,q[1..]);
-//     q_new + q'
-// }
+// This function updates a query under the valuation x:=b. It
+// invokes update_clause on each clause in turn.
+function update_query (x:symbol, b:bool, q:query) : query
+{
+  if q == [] then [] else
+    var q_new := update_clause(x,b,q[0]);
+    var q' := update_query(x,b,q[1..]);
+    q_new + q'
+}
 
-// // Updating a query under the valuation x:=b is the same as updating 
-// // the valuation itself and leaving the query unchanged.
-// lemma evaluate_update_query(x:symbol, b:bool, r:valuation, q:query)
-// requires x !in r.Keys
-// ensures evaluate (update_query (x,b,q), r) == evaluate (q, r[x:=b])
-// {
-//   // ...?
-// }
+// Updating a query under the valuation x:=b is the same as updating 
+// the valuation itself and leaving the query unchanged.
+lemma evaluate_update_query(x:symbol, b:bool, r:valuation, q:query)
+requires x !in r.Keys
+ensures evaluate (update_query (x,b,q), r) == evaluate (q, r[x:=b])
+{
+  if q == [] {
+    assert evaluate(update_query(x, b, q), r) == true;
+    assert evaluate(q, r[x := b]) == true;
 
-// // A simple SAT solver. Given a query, it does a three-way case split. If
-// // the query has no clauses then it is trivially satisfiable (with the
-// // empty valuation). If the first clause in the query is empty, then the
-// // query is unsatisfiable. Otherwise, it considers the first symbol that 
-// // appears in the query, and makes two recursive solving attempts: one 
-// // with that symbol evaluated to true, and one with it evaluated to false.
-// // If neither recursive attempt succeeds, the query is unsatisfiable.
-// method simp_solve (q:query)
-// returns (sat:bool, r:valuation)
-// ensures sat==true ==> evaluate(q,r)
-// ensures sat==false ==> forall r :: !evaluate(q,r)
-// {
-//   if (q == []) {
-//     return true, map[];
-//   } else if (q[0] == []) {
-//     return false, map[];
-//   } else {
-//     var x := q[0][0].0;
-//     sat, r := simp_solve(update_query(x,true,q));
-//     if (sat) {
-//       r := r[x:=true];
-//       return;
-//     } 
-//     sat, r := simp_solve(update_query(x,false,q));
-//     if (sat) {
-//       r := r[x:=false];
-//       return;
-//     }
-//     return sat, map[];
-//   }
-// }
+    assert evaluate (update_query (x,b,q), r) == evaluate (q, r[x:=b]);
+  } else {
+    var c := q[0];
+    var q_tail := q[1..];
+
+    if (x, b) in c {
+      // Case 1: c contains (x, b), so c is removed from the query
+      // Remove c from the query since it is satisfied, and the result depends only on q_tail
+      var updated_q := update_query(x, b, q);
+      assert x !in symbols(updated_q);
+      assert updated_q == update_query(x, b, q_tail);
+    
+      assert evaluate(updated_q, r) == evaluate(q_tail, r);
+      // After removing c, evaluate the query as just q_tail
+      assert evaluate(update_query(x, b, q), r) == evaluate(q_tail, r);
+      assert evaluate(q, r[x := b]) == evaluate(q_tail, r[x := b]);
+
+      assert evaluate (update_query (x,b,q), r) == evaluate (q, r[x:=b]);
+
+    } else if (x, !b) in c {
+      // Case 2: c does not contain (x, b) but contains (x, !b) 
+      // Remove all occurrences of (x, !b) from c
+      var c_new := remove_symbols_clause(c, {x});
+      assert forall i :: 0 <= x < |q| ==> x !in symbols_clause(q[i]);
+      assert update_query(x, b, q) == [c_new] + update_query(x, b, q_tail);
+      assert evaluate(update_query(x, b, q), r) == evaluate([c_new] + update_query(x, b, q_tail), r);
+      assert evaluate(q, r[x := b]) == evaluate([c_new] + q_tail, r[x := b]);
+    } else {
+      // Case 3: c does not contain (x, b) or (x, !b)
+      assert update_query(x, b, q) == [c] + update_query(x, b, q_tail);
+      assert evaluate(update_query(x, b, q), r) == evaluate([c] + update_query(x, b, q_tail), r);
+      assert evaluate(q, r[x := b]) == evaluate([c] + q_tail, r[x := b]);
+    }
+
+    // Recursive call for q_tail
+    evaluate_update_query(x, b, r, q_tail);
+  }
+}
+
+// A simple SAT solver. Given a query, it does a three-way case split. If
+// the query has no clauses then it is trivially satisfiable (with the
+// empty valuation). If the first clause in the query is empty, then the
+// query is unsatisfiable. Otherwise, it considers the first symbol that 
+// appears in the query, and makes two recursive solving attempts: one 
+// with that symbol evaluated to true, and one with it evaluated to false.
+// If neither recursive attempt succeeds, the query is unsatisfiable.
+method simp_solve (q:query)
+returns (sat:bool, r:valuation)
+ensures sat==true ==> evaluate(q,r)
+ensures sat==false ==> forall r :: !evaluate(q,r)
+{
+  if (q == []) {
+    return true, map[];     // empty query is trivially satisfiable
+  } else if (q[0] == []) {
+    return false, map[];    // empty clause is unsatisfiable
+  } else {
+    var x := q[0][0].0;
+    sat, r := simp_solve(update_query(x,true,q));
+    if (sat) {
+      r := r[x:=true];
+      return;
+    } 
+    sat, r := simp_solve(update_query(x,false,q));
+    if (sat) {
+      r := r[x:=false];
+      return;
+    }
+    return sat, map[];
+  }
+}
 
 method Main ()
 {
