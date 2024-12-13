@@ -174,6 +174,19 @@ module multiplier (
           // && (13 % 13 != 0)
       );
 
+      reg [3:0] i;
+      reg [3:0] j;
+      always @(posedge clk) begin
+        for (i = 2; i < 13; i = i + 1) begin
+          for (j = 2; j < 13; j = j + 1) begin
+              cover property (
+                  in1 == i && in2 == j && out != 13
+              );
+          end
+        end
+    end
+  
+
     /*
     #10. 
     Can you combine all of the properties you wrote for Questions 5 and 6

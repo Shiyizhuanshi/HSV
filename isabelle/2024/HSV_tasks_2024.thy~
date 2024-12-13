@@ -36,7 +36,7 @@ fun intro_nand where
          NAND (intro_nand c1) (intro_nand c2))"
 | "intro_nand (NOT c) = NAND (intro_nand c) TRUE"
 | "intro_nand TRUE = TRUE"
-| "intro_nand FALSE = NAND TRUE FALSE"
+| "intro_nand FALSE = NAND TRUE TRUE"
 | "intro_nand (INPUT i) = INPUT i"
 
 
@@ -44,12 +44,14 @@ text \<open> The intro_nand transformation is sound. Note that there is a
   (deliberate) bug in the definition above, which you will need to fix 
   before you can prove the theorem below.\<close>
 theorem intro_nand_is_sound: "intro_nand c \<sim> c"
-  oops
+proof(induction c)
+qed(simp+)
 
 text \<open> The only_nands predicate holds if a circuit contains only NAND gates. \<close>
 fun only_nands where
   "only_nands (NAND c1 c2) = (only_nands c1 \<and> only_nands c2)"
 | "only_nands (INPUT _) = True"
+| "only_nands TRUE = True"
 | "only_nands _ = False"
 
 text \<open> The output of the intro_nand transformation is a circuit that only
@@ -58,7 +60,9 @@ text \<open> The output of the intro_nand transformation is a circuit that only
   theorem below. \<close>
 theorem intro_nand_only_produces_nands:
   "only_nands (intro_nand c)"
-  oops
+proof(induction c)
+qed(simp+)
+
 
 section \<open> Task 2: Converting numbers to lists of digits. \<close>
 
@@ -72,12 +76,29 @@ value "digits10 42"
 text \<open> Every digit is less than 10 (helper lemma). \<close>
 lemma digits10_all_below_10_helper: 
   "ds = digits10 n \<Longrightarrow> \<forall>d \<in> set ds. d < 10"
-  oops
+proof (induction n arbitrary: ds rule: digits10.induct)
+  case (1 n)
+  then show ?case 
+  proof (cases" n < 10")
+    case True
+    then show ?thesis 
+      by (simp add: "1.prems")
+  next
+    case False
+    then have "ds = (n mod 10) # digits10 (n div 10)" using "1.prems" by simp
+    moreover have "n mod 10 < 10" by simp
+    moreover have "\<forall>d \<in> set (digits10 (n div 10)). d < 10" using "1.IH" False by blast
+    ultimately show ?thesis 
+      by (metis set_ConsD)
+  qed
+qed
 
 text \<open> Every digit is less than 10. \<close>
 corollary 
   "\<forall>d \<in> set (digits10 n). d < 10" 
-  oops
+  using digits10_all_below_10_helper by blast
+
+
 
 text \<open> Task 3: Converting to and from digit lists. \<close>
 
@@ -92,9 +113,35 @@ value "sum10 [2,4]"
 text \<open> Applying digits10 then sum10 gets you back to the same number. \<close>
 theorem digits10_sum10_inverse: 
   "sum10 (digits10 n) = n"
-  oops
+proof(induction n rule:digits10.induct)
+qed(simp+)
+
+text \<open> Applying sum10 and then digits10 doesn't always gets you back to the same list \<close>
+theorem sum10_digits10_not_same:
+  "\<exists>n. digits10 (sum10 n) \<noteq> n"
+proof -
+  let ?n = "[1,0]"  (* Define the witness *)
+  have "sum10 ?n = 1" by simp
+  hence "digits10 (sum10 ?n) = [1]" by simp
+  moreover have "?n \<noteq> digits10 (sum10 ?n)" by simp
+  ultimately show ?thesis by metis
+qed
+
+
 
 section \<open> Task 4: A divisibility theorem. \<close>
+theorem ababab_37_divisible:
+  fixes a b :: nat
+  assumes "a < 10" "b < 10"
+  defines "n \<equiv> 101010 * a + 10101 * b"
+  shows "37 dvd n"
+proof -
+  have "n = (10 * a + b)* 10101" using n_def by simp
+  hence "n = 37 * 273 * (10 * a + b)" by simp
+  then show "37 dvd n" by simp
+qed
+
+
 
 section \<open> Task 5: Verifying a naive SAT solver. \<close>
 
@@ -244,14 +291,37 @@ text \<open> If the naive SAT solver returns a valuation, then that
 theorem naive_solve_correct_sat:
   assumes "naive_solve q = Some \<rho>"
   shows "evaluate q \<rho>"
-  oops
+proof -
+  let ?xs = "symbol_list q"
+  let ?\<rho>s = "mk_valuation_list ?xs"
+  have fold_def: "List.fold (until (evaluate q)) ?\<rho>s None = Some \<rho>"
+    using assms by (simp add: naive_solve_def)
+  then have eval_\<rho>: "evaluate q \<rho>"
+    using until_none_some
+    by metis
+  thus ?thesis
+    by simp
+qed
 
+ 
 text \<open> If the naive SAT solver returns no valuation, then none of the valuations 
   it tried make the query true. \<close>
 theorem naive_solve_correct_unsat:
   assumes "naive_solve q = None"
-  shows "\<forall>\<rho> \<in> set (mk_valuation_list (symbol_list q)). \<not> evaluate q \<rho>" 
-  oops
+  shows "\<forall>\<rho> \<in> set (mk_valuation_list (symbol_list q)). \<not> evaluate q \<rho>"
+proof -
+  let ?xs = "symbol_list q"
+  let ?\<rho>s = "mk_valuation_list ?xs"
+  have fold_def: "List.fold (until (evaluate q)) ?\<rho>s None = None"
+    using assms by (simp add: naive_solve_def)
+  hence list_all_not_eval: "list_all (\<lambda>\<rho>. \<not> evaluate q \<rho>) ?\<rho>s"
+    using until_none
+    by blast
+  thus ?thesis
+    by (simp add: list_all_iff)
+qed
+
+
 
 section \<open> Task 6: Verifying a simple SAT solver. \<close>
 
@@ -316,8 +386,9 @@ where
          Some \<rho> \<Rightarrow> Some ((x, False) # \<rho>)
        | None \<Rightarrow> None)))"
 by pat_completeness auto
-termination 
-  sorry
+termination sorry
+   
+
 
 value "simp_solve q1"
 value "simp_solve q2"
@@ -332,13 +403,39 @@ where
 lemma evaluate_update_query: 
   assumes "x \<notin> domain \<rho>"
   shows "evaluate (update_query x b q) \<rho> = evaluate q ((x, b) # \<rho>)"
-  oops
+proof (induct q)
+  case Nil
+  then show ?case by simp
+next
+  case (Cons c q')
+  then show ?case
+  proof (cases "List.member c (x, b)")
+    case True
+    then have "update_clause x b c = []" by simp
+    then show ?thesis
+      by simp
+  next
+    case False
+    then have "update_clause x b c = [removeAll (x, \<not> b) c]" by simp
+    then show ?thesis
+    proof -
+      have "evaluate_clause \<rho> (update_clause x b c) = evaluate_clause ((x, b) # \<rho>) c"
+        by (simp add: evaluate_clause_def)
+      also have "evaluate q' ((x, b) # \<rho>) = evaluate (update_query x b q') \<rho>"
+        using Cons by (induct q') simp
+      finally show ?thesis by simp
+    qed
+  qed
+qed
+
+
 
 text \<open> If the simple SAT solver returns a valuation, then that 
   valuation really does make the query true. \<close>
 theorem simp_solve_sat_correct:
   "simp_solve q = Some \<rho> \<Longrightarrow> evaluate q \<rho>"
-  oops
+proof - oops
+  
 
 text \<open> A valuation is deemed well-formed (wf) as long as it does
   not assign a truth-value for the same symbol more than once. \<close>
